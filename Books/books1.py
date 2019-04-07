@@ -8,9 +8,17 @@ import re
 #    return lastName
 
 def main():
+    if (len(sys.argv)) < 3:
+        print('Usage: blah blah blah', file=sys.stderr)
+    
+    
     filename = sys.argv[1]
     action = sys.argv[2]
-    direction = sys.argv[3]
+    if len(sys.argv) > 3:
+        direction = sys.argv[3]
+    else: 
+        direction = "forward"
+        
     with open(filename, newline = '') as csvfile:
         reader = csv.reader(csvfile)
         outputList = []
@@ -27,14 +35,14 @@ def main():
         elif action == "authors":
             for row in reader:
                 author = row[2]
-                name = author.split('(')[0]                
+                name = author.split('(')[0]
                 outputList.append(name)
             if direction == "forward":
-                outputList.sort(key = lambda name: name.split(' ')[-1])
+                outputList.sort(key = lambda x: x.split(' ')[-2])
             elif direction == "reverse":
-                outputList.sort(key = lambda name: name.split(' ')[-1], reverse=True)
-            else:
-                print("Improperly added direction")
+                outputList.sort(key = lambda x: x.split(' ')[-2], reverse=True)
+        
         for i in range(len(outputList)):
             print(outputList[i])
+            
 main()
