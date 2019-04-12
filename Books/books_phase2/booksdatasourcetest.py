@@ -114,7 +114,7 @@ class BooksDataSourceTest(unittest.TestCase):
     '''
     
     def test_authors_no_parameters(self):
-        pass
+        self.assertEqual(self.booksDataSource.authors(), [{0: 'Connie Willis'}, {1: 'Agatha Christie'}, {2: 'Toni Morrison'}, {3: 'Sinclair Lewis'}, {4: 'Jane Austen'}, {5: 'Neil Gaiman'}, {6: 'Terry Pratchett'}, {7: 'Charlotte Brontë'}, {8: 'Pelham Grenville Wodehouse'}, {9: 'Gabriel García Márquez'}, {10: 'Sinclair Lewis'}, {11: 'Salman Rushdie'}, {12: 'Lois McMaster Bujold'}, {13: 'Herman Melville'}, {14: 'Ann Brontë'}, {15: 'Emily Brontë'}, {16: 'Haruki Murakami'}, {17: 'Willa Cather'}, {18: 'Naomi Alderman'}, {19: 'Daphne DuMaurier'}, {20: 'N.K. Jemisen'}, {21: 'Jerome K. Jerome'}, {22: 'Geogre Eliot'}, {23: 'Charles Dickens'}, {24: 'John Le Carré'}])
     
     def test_authors_valid_book_ID(self):
         self.assertEqual(self.booksDataSource.authors(book_id=1), ["Agatha Christie"])
@@ -166,7 +166,12 @@ class BooksDataSourceTest(unittest.TestCase):
         
     def test_authors_sort_by_brith_year_wrong_order(self):
         self.assertNotEqual(self.booksDataSource.authors(start_year = 1816, sort_by = 'birth_year'), ['Jane Austen', 'Charlotte Brontë', 'Charles Dickens'])
-
         
+    def test_authors_two_parameters_start_year_end_year(self): 
+        self.assertEqual(self.booksDataSource.authors(start_year = 1816, end_year = 1900), ['Jane Austen', 'Ann Brontë', 'Charlotte Brontë', 'Emily Brontë', 'Willa Cather', 'Agatha Christie', 'Charles Dickens', 'Geogre Eliot', 'Jerome K. Jerome', 'Sinclair Lewis', 'Herman Melville', 'Pelman Grenville Wodehouse'])
+        
+    def test_authors_two_parameters_search_text_sort_by(self):
+        self.assertEqual(self.booksDataSource.authors(search_text = 'an', sort_by = 'birth_year'), ['Jane Austen', 'Herman Melville', 'Ann Brontë', 'Salman Rushdie', 'Neil Gaiman'])
+    
 if __name__ == '__main__':
     unittest.main()
