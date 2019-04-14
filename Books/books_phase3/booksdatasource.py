@@ -7,17 +7,10 @@
     For use in some assignments at the beginning of Carleton's
     CS 257 Software Design class.
 '''
+import csv
 
 class BooksDataSource:
     '''
-    A BooksDataSource object provides access to data about books and authors.
-    The particular form in which the books and authors are stored will
-    depend on the context (i.e. on the particular assignment you're
-    working on at the time).
-
-    Most of this class's methods return Python lists, dictionaries, or
-    strings representing books, authors, and related information.
-
     An author is represented as a dictionary with the keys
     'id', 'last_name', 'first_name', 'birth_year', and 'death_year'.
     For example, Jane Austen would be represented like this
@@ -74,19 +67,80 @@ class BooksDataSource:
             NOTE TO STUDENTS: I have not specified how you will store the books/authors
             data in a BooksDataSource object. That will be up to you, in Phase 3.
         '''
-        pass
-
+        
+        with open(books_filename, newline = '') as csvfile:
+            readerBooks = csv.reader(csvfile)
+            self.bookDict = {}
+            for row in readerBooks:
+                bookInfo = {}
+                bookInfo['id'] = int(row[0])
+                bookInfo['title'] = row[1]
+                bookInfo['publication_year'] = int(row[2])
+                
+                self.bookDict[int(row[0])] = bookInfo
+        
+        with open(authors_filename, newline = '') as csvfile:
+            readerAuthors = csv.reader(csvfile)
+            self.authorDict = {}
+            for row in readerAuthors:
+                authorInfo = {}
+                authorInfo['id'] = int(row[0])
+                authorInfo['last_name'] = row[1]
+                authorInfo['first_name'] = row[2]
+                authorInfo['birth_year'] = row[3]
+                if row[4] == 'NULL':
+                    authorInfo['death_year'] = None
+                else:
+                    authorInfo['death_year'] = row[4]
+                
+                self.authorDict[int(row[0])] = authorInfo
+        
+        '''
+            Use bookID as the key and authorID as the value
+        '''
+        
+        with open(books_authors_link_filename, newline = '') as csvfile:
+            readerBooksAuthors = csv.reader(csvfile)
+            self.bookKeyAuthorValueDict = {}
+            for row in readerBooksAuthors:
+                bookID = int(row[0])
+                authorID = int(row[1])
+                if bookID in self.bookKeyAuthorValueDict: 
+                    currentAuthorIDList = self.bookKeyAuthorValueDict[bookID]
+                    currentAuthorIDList.append(authorID)
+                    self.bookKeyAuthorValueDict[bookID] = currentAuthorIDList
+                else:
+                    self.bookKeyAuthorValueDict[bookID] = [authorID]
+                    
+        '''
+            Use authorID as the key and bookID as the value
+        '''
+            self.authorKeyBookValueDict = {}
+            for row in readerBooksAuthors:
+                bookID = int(row[0])
+                authorID = int(row[1])
+                if authorID in self.authorKeyBookValueDict: 
+                    currentBookIDList = self.authorKeyBookValueDict[authorID]
+                    currentBookIDList.append(bookID)
+                    self.authorKeyBookValueDict[authorID] = currentBookIDList
+                else:
+                    self.authorKeyBookValueDict[authorID] = [bookID]
+                
+                
     def book(self, book_id):
-        ''' Returns the book with the specified ID. (See the BooksDataSource comment
-            for a description of how a book is represented.)
-
+        ''' Returns the book with the specified ID. (See the BooksDataSource comment for a description of how a book is represented.)
             Raises ValueError if book_id is not a valid book ID.
         '''
-        return {}
-
+        if book_id not in self.bookDict and book_id > 0: 
+            raise ValueError('Book ID is too big')
+        elif book_id < 0:
+            raise ValueError('Book ID cannot be negative')
+        elif book_id in self.bookDict:
+            print(self.bookDict[book_id])
+        
+                
     def books(self, *, author_id=None, search_text=None, start_year=None, end_year=None, sort_by='title'):
-        ''' Returns a list of all the books in this data source matching all of
-            the specified non-None criteria.
+        ''' Returns a list of all the books in this data source matching all of the specified non-None criteria.
 
                 author_id - only returns books by the specified author
                 search_text - only returns books whose titles contain (case-insensitively) the search text
@@ -102,8 +156,6 @@ class BooksDataSource:
                 'year' -- sorts by publication_year, breaking ties with (case-insenstive) title
                 default -- sorts by (case-insensitive) title, breaking ties with publication_year
 
-            See the BooksDataSource comment for a description of how a book is represented.
-
             QUESTION: Should Python interfaces specify TypeError?
             Raises TypeError if author_id, start_year, or end_year is non-None but not an integer.
             Raises TypeError if search_text or sort_by is non-None, but not a string.
@@ -113,15 +165,111 @@ class BooksDataSource:
             Raises ValueError if author_id is non-None but is not a valid author ID.
 				OUR ANSWER: Yes, but just for author_id.
         '''
-        return []
+        booksList = []
+        bookIDList = []
+        
+        if author_id != None:     
+            if author_id not in self.authorDict and author_id > 0: 
+                raise ValueError('Author ID is too big')
+            elif author_id < 0:
+                raise ValueError('Author ID cannot be negative')
+            else:
+                bookIDList = self.authorKeyBookValueDict[author_id]
+        
+            if search_text != None:
+                bookIDListSearchText = []
+                for bookID in bookIDList: 
+                    bookName = self.bookDict[bookID]['title']
+                    if search_text in bookName:
+                        bookIDListSearchText.append(bookID)
+                bookIDList = bookIDListSearchText
+            
+            if start_year != None: 
+                bookIDListStartYear = [] 
+                for bookID in bookIDList:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear >= start_year:
+                        bookIDListStartYear.append(bookID)
+                bookIDList = bookIDListStartYear
+                
+            if end_year != None:
+                bookIDListEndYear = []
+                for bookID in bookIDList:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear =< end_year:
+                        bookIDListEndYear.append(bookID)
+                bookIDList = bookIDListEndYear             
 
+                
+            
+        elif search_text != None:
+            for bookID in self.bookDict: 
+                bookName = self.bookDict[bookID]['title']
+                if search_text in bookName: 
+                    bookIDList.append(bookID)
+            
+            
+            if start_year != None: 
+                bookIDListStartYear = [] 
+                for bookID in bookIDList:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear >= start_year:
+                        bookIDListStartYear.append(bookID)
+                bookIDList = bookIDListStartYear
+            
+            if end_year != None:
+                bookIDListEndYear = []
+                for bookID in bookIDList:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear =< end_year:
+                        bookIDListEndYear.append(bookID)
+                bookIDList = bookIDListEndYear
+        
+        elif start_year != None:
+            for bookID in self.bookDict:
+                bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                if bookPublicationYear >= start_year:
+                    bookIDList.append(bookID)
+                    
+            if end_year != None:
+                bookIDListEndYear = []
+                for bookID in bookIDList:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear =< end_year:
+                        bookIDListEndYear.append(bookID)
+                bookIDList = bookIDListEndYear
+        
+        elif end_year != None: 
+                for bookID in self.bookDict:
+                    bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                    if bookPublicationYear =< end_year:
+                        bookIDList.append(bookID)
+                     
+        else: 
+            print(self.bookDict)
+            
+            
+        for bookID in bookIDList: 
+            bookEntry = self.bookDict[bookID]
+            booksList.append(bookEntry)
+        if sort_by == 'title':
+            newBookEntryList = sorted(booksList, key=lambda k: k['title']) 
+        elif sort_by == 'year':
+            newBookEntryList = sorted(booksList, key=lambda k: k['publication_year'])    
+        return booksList
+    
     def author(self, author_id):
         ''' Returns the author with the specified ID. (See the BooksDataSource comment for a
             description of how an author is represented.)
-
             Raises ValueError if author_id is not a valid author ID.
         '''
-        return {}
+        if author_id not in self.authorDict and author_id > 0: 
+            raise ValueError('Author ID is too big')
+        elif author_id < 0:
+            raise ValueError('Author ID cannot be negative')
+        elif author_id in self.bookDict:
+            print(self.authorDict[author_id])
+        
 
     def authors(self, *, book_id=None, search_text=None, start_year=None, end_year=None, sort_by='birth_year'):
         ''' Returns a list of all the authors in this data source matching all of the
@@ -149,3 +297,9 @@ class BooksDataSource:
             See the BooksDataSource comment for a description of how an author is represented.
         '''
         return []
+    
+if __name__ == '__main__':
+    
+    books = BooksDataSource('books.csv', 'authors.csv', 'books_authors.csv')
+    authorID = int(input('Enter a number '))
+    books.author(authorID)
