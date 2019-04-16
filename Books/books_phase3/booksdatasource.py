@@ -183,10 +183,10 @@ class BooksDataSource:
                 removeBooksThatDontMatchSearchText(bookIDList)
             
             if start_year != None: 
-                removeBooksThatDontMatchStartYear(bookIDList, start_year)
+                self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
                 
             if end_year != None:
-                removeBooksThatDontMatchEndYear(bookIDList, end_year)          
+                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)          
   
         elif search_text != None:
             for bookID in self.bookDict: 
@@ -196,10 +196,10 @@ class BooksDataSource:
             
             
             if start_year != None: 
-                removeBooksThatDontMatchStartYear(bookIDList, start_year)
+                self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
             
             if end_year != None:
-                removeBooksThatDontMatchEndYear(bookIDList, end_year)
+                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
         
         elif start_year != None:
             for bookID in self.bookDict:
@@ -208,7 +208,7 @@ class BooksDataSource:
                     bookIDList.append(bookID)
                     
             if end_year != None:
-                removeBooksThatDontMatchEndYear(bookIDList, end_year)
+                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
         
         elif end_year != None: 
             for bookID in self.bookDict:
@@ -306,13 +306,13 @@ class BooksDataSource:
                 authorIDList = self.authorKeyBookValueDict[book_id]
         
             if search_text != None:
-                removeAuthorsThatDontMatchSearchText(authorIDList)
+                self.removeAuthorsThatDontMatchSearchText(authorIDList)
             
             if start_year != None: 
-                removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
+                self.removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
                 
             if end_year != None:
-                removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)          
+                self.removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)          
   
         elif search_text != None:
             for authorID in self.authorDict: 
@@ -323,7 +323,7 @@ class BooksDataSource:
             
             
             if start_year != None: 
-                removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
+                self.removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
             
             if end_year != None:
                 removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)
@@ -335,7 +335,7 @@ class BooksDataSource:
                     authorIDList.append(authorID)
                     
             if end_year != None:
-                removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)
+                self.removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)
         
         elif end_year != None: 
             for authorID in self.authorDict:
@@ -348,8 +348,8 @@ class BooksDataSource:
             
             
         for authorID in authorIDList: 
-            bookEntry = self.authorDict[authorID]
-            authorsList.append(bookEntry)
+            authorEntry = self.authorDict[authorID]
+            authorsList.append(authorEntry)
         if sort_by == 'title':
             newAuthorEntryList = sorted(authorsList, key=lambda k: k['title']) 
         elif sort_by == 'year':
