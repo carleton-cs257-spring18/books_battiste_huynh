@@ -229,7 +229,7 @@ class BooksDataSource:
             newBookEntryList = sorted(booksList, key = self.getBookTitle)
         elif sort_by == 'year':
             newBookEntryList = sorted(booksList, key= self.getPublicationYear)    
-        return booksList
+        return newBookEntryList
     
     def getBookTitle(self, book): 
         return book.get('title')
@@ -363,10 +363,10 @@ class BooksDataSource:
             authorEntry = self.authorDict[authorID]
             authorsList.append(authorEntry)
         if sort_by == 'birth_year':
-            newAuthorEntryList = sorted(authorsList, key=lambda k: k['birth_year']) 
+            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['first_name'], k['last_name'], k['birth_year']))
         else:
-            newAuthorEntryList = sorted(authorsList, key=lambda k: k['last_name'])    
-        return authorsList
+            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['birth_year'], k['first_name'], k['last_name'])) 
+        return newAuthorEntryList
     
     
     def removeAuthorsThatDontMatchSearchText(self, authorIDList, search_text): 
@@ -393,10 +393,9 @@ class BooksDataSource:
         authorIDListEndYear = [] 
         for authorID in authorIDList:
             authorBirthYear = self.authorDict[authorID]['birth_year']
-            if authorBirthYear >= end_year:
+            if authorBirthYear <= end_year:
                 authorIDListEndYear.append(authorID)
         return authorIDListEndYear
     
 if __name__ == '__main__':
     books = BooksDataSource('books.csv', 'authors.csv', 'books_authors.csv')
-#    print(books.authors(search_text = 'Jane', start_year = 1900))
