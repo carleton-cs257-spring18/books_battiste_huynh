@@ -180,7 +180,7 @@ class BooksDataSource:
                 bookIDList = self.authorKeyDict[author_id]
         
             if search_text != None:
-                removeBooksThatDontMatchSearchText(bookIDList)
+                self.removeBooksThatDontMatchSearchText(bookIDList)
             
             if start_year != None: 
                 self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
@@ -203,7 +203,7 @@ class BooksDataSource:
         
         elif start_year != None:
             for bookID in self.bookDict:
-                bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                bookPublicationYear = self.bookDict[bookID]['publication_year']
                 if bookPublicationYear >= start_year:
                     bookIDList.append(bookID)
                     
@@ -212,7 +212,7 @@ class BooksDataSource:
         
         elif end_year != None: 
             for bookID in self.bookDict:
-                bookPublicationYear = self.bookdDict[bookID]['publication_year']
+                bookPublicationYear = self.bookDict[bookID]['publication_year']
                 if bookPublicationYear <= end_year:
                     bookIDList.append(bookID)
                      
@@ -241,7 +241,7 @@ class BooksDataSource:
     def removeBooksThatDontMatchStartYear(self, bookIDList, start_year):
         bookIDListStartYear = [] 
         for bookID in bookIDList:
-            bookPublicationYear = self.bookdDict[bookID]['publication_year']
+            bookPublicationYear = self.bookDict[bookID]['publication_year']
             if bookPublicationYear >= start_year:
                 bookIDListStartYear.append(bookID)
         return bookIDListStartYear
@@ -249,7 +249,7 @@ class BooksDataSource:
     def removeBooksThatDontMatchEndYear(self, bookIDList, end_year):
         bookIDListEndYear = [] 
         for bookID in bookIDList:
-            bookPublicationYear = self.bookdDict[bookID]['publication_year']
+            bookPublicationYear = self.bookDict[bookID]['publication_year']
             if bookPublicationYear <= end_year:
                 bookIDListEndYear.append(bookID)
         return bookIDListEndYear
