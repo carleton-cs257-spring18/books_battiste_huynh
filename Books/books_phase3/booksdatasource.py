@@ -363,9 +363,9 @@ class BooksDataSource:
             authorEntry = self.authorDict[authorID]
             authorsList.append(authorEntry)
         if sort_by == 'birth_year':
-            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['first_name'], k['last_name'], k['birth_year']))
+            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['birth_year'], k['last_name'], k['first_name']))
         else:
-            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['birth_year'], k['first_name'], k['last_name'])) 
+            newAuthorEntryList = sorted(authorsList, key=lambda k: (k['last_name'], k['first_name'], k['birth_year'])) 
         return newAuthorEntryList
     
     
