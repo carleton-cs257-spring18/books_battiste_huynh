@@ -101,30 +101,32 @@ class BooksDataSource:
         
         with open(books_authors_link_filename, newline = '') as csvfile:
             readerBooksAuthors = csv.reader(csvfile)
-            self.bookKeyAuthorValueDict = {}
+            self.bookKeyDict = {}
             for row in readerBooksAuthors:
                 bookID = int(row[0])
                 authorID = int(row[1])
-                if bookID in self.bookKeyAuthorValueDict: 
-                    currentAuthorIDList = self.bookKeyAuthorValueDict[bookID]
+                if bookID in self.bookKeyDict: 
+                    currentAuthorIDList = self.bookKeyDict[bookID]
                     currentAuthorIDList.append(authorID)
-                    self.bookKeyAuthorValueDict[bookID] = currentAuthorIDList
+                    self.bookKeyDict[bookID] = currentAuthorIDList
                 else:
-                    self.bookKeyAuthorValueDict[bookID] = [authorID]
+                    self.bookKeyDict[bookID] = [authorID]
                     
         '''
             Use authorID as the key and bookID as the value
         '''
-            self.authorKeyBookValueDict = {}
+        with open(books_authors_link_filename, newline = '') as csvfile:
+            readerBooksAuthors = csv.reader(csvfile)
+            self.authorKeyDict = {}
             for row in readerBooksAuthors:
                 bookID = int(row[0])
                 authorID = int(row[1])
-                if authorID in self.authorKeyBookValueDict: 
-                    currentBookIDList = self.authorKeyBookValueDict[authorID]
+                if authorID in self.authorKeyDict: 
+                    currentBookIDList = self.authorKeyDict[authorID]
                     currentBookIDList.append(bookID)
-                    self.authorKeyBookValueDict[authorID] = currentBookIDList
+                    self.authorKeyDict[authorID] = currentBookIDList
                 else:
-                    self.authorKeyBookValueDict[authorID] = [bookID]
+                    self.authorKeyDict[authorID] = [bookID]
                 
                 
     def book(self, book_id):
@@ -174,7 +176,7 @@ class BooksDataSource:
             elif author_id < 0:
                 raise ValueError('Author ID cannot be negative')
             else:
-                bookIDList = self.authorKeyBookValueDict[author_id]
+                bookIDList = self.authorKeyDict[author_id]
         
             if search_text != None:
                 bookIDListSearchText = []
