@@ -7,7 +7,7 @@
     For use in some assignments at the beginning of Carleton's
     CS 257 Software Design class.
 '''
-import csv
+import csv 
 
 class BooksDataSource:
     '''
@@ -139,7 +139,7 @@ class BooksDataSource:
         elif book_id < 0:
             raise ValueError('Book ID cannot be negative')
         elif book_id in self.bookDict:
-            print(self.bookDict[book_id])
+            return self.bookDict[book_id]
         
                 
     def books(self, *, author_id=None, search_text=None, start_year=None, end_year=None, sort_by='title'):
@@ -180,26 +180,27 @@ class BooksDataSource:
                 bookIDList = self.authorKeyDict[author_id]
         
             if search_text != None:
-                self.removeBooksThatDontMatchSearchText(bookIDList)
+                bookIDList = self.removeBooksThatDontMatchSearchText(bookIDList)
             
             if start_year != None: 
-                self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
+                bookIDList = self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
                 
             if end_year != None:
-                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)          
+                bookIDList = self.removeBooksThatDontMatchEndYear(bookIDList, end_year)          
   
         elif search_text != None:
+            searchText = search_text.lower()
             for bookID in self.bookDict: 
-                bookName = self.bookDict[bookID]['title']
-                if search_text in bookName: 
+                bookName = self.bookDict[bookID]['title'].lower()
+                if searchText in bookName: 
                     bookIDList.append(bookID)
             
             
             if start_year != None: 
-                self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
+                bookIDList = self.removeBooksThatDontMatchStartYear(bookIDList, start_year)
             
             if end_year != None:
-                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
+                bookIDList = self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
         
         elif start_year != None:
             for bookID in self.bookDict:
@@ -208,7 +209,7 @@ class BooksDataSource:
                     bookIDList.append(bookID)
                     
             if end_year != None:
-                self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
+                bookIDList = self.removeBooksThatDontMatchEndYear(bookIDList, end_year)
         
         elif end_year != None: 
             for bookID in self.bookDict:
@@ -217,23 +218,31 @@ class BooksDataSource:
                     bookIDList.append(bookID)
                      
         else: 
-            print(self.bookDict)
-            
+            for books in self.bookDict:
+                booksList.append(self.bookDict[books])            
             
         for bookID in bookIDList: 
             bookEntry = self.bookDict[bookID]
             booksList.append(bookEntry)
+                    
         if sort_by == 'title':
-            newBookEntryList = sorted(booksList, key=lambda k: k['title']) 
+            newBookEntryList = sorted(booksList, key = self.getBookTitle)
         elif sort_by == 'year':
-            newBookEntryList = sorted(booksList, key=lambda k: k['publication_year'])    
+            newBookEntryList = sorted(booksList, key= self.getPublicationYear)    
         return booksList
+    
+    def getBookTitle(self, book): 
+        return book.get('title')
+    
+    def getPublicationYear(self, book):
+        return book.get('publication_year')
     
     
     def removeBooksThatDontMatchSearchText(self, bookIDList, search_text): 
+        searchText = search_text.lower()
         bookIDListSearchText = []
         for bookID in bookIDList: 
-            bookName = self.bookDict[bookID]['title']
+            bookName = self.bookDict[bookID]['title'].lower()
             if search_text in bookName:
                 bookIDListSearchText.append(bookID)
         return bookIDListSearchText
@@ -265,7 +274,7 @@ class BooksDataSource:
         elif author_id < 0:
             raise ValueError('Author ID cannot be negative')
         elif author_id in self.bookDict:
-            print(self.authorDict[author_id])
+            return self.authorDict[author_id]
         
 
     def authors(self, *, book_id=None, search_text=None, start_year=None, end_year=None, sort_by='birth_year'):
@@ -303,85 +312,91 @@ class BooksDataSource:
             elif book_id < 0:
                 raise ValueError('Author ID cannot be negative')
             else:
-                authorIDList = self.authorKeyBookValueDict[book_id]
+                authorIDList = self.bookKeyDict[book_id]
         
             if search_text != None:
-                self.removeAuthorsThatDontMatchSearchText(authorIDList)
+                authorIDList = self.removeAuthorsThatDontMatchSearchText(authorIDList)
             
             if start_year != None: 
-                self.removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
+                authorIDList = self.removeAuthorsThatWerentAliveAfterStartYear(authorIDList, start_year)
                 
             if end_year != None:
-                self.removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)          
+                authorIDList = self.removeAuthorsThatWerentAliveBeforeEndYear(authorIDList, end_year)          
   
         elif search_text != None:
+            searchText = search_text.lower()
             for authorID in self.authorDict: 
-                authorFirstName = self.authorDict[authorID]['first_name']
-                authorLastName = self.authorDict[authorID]['last_name']
-                if search_text in authorFirstName or search_text in authorLastName: 
+                authorFirstName = self.authorDict[authorID]['first_name'].lower()
+                authorLastName = self.authorDict[authorID]['last_name'].lower()
+                if searchText in authorFirstName or searchText in authorLastName: 
                     authorIDList.append(authorID)
             
             
             if start_year != None: 
-                self.removeAuthorsThatWerentAliveBeforeStartYear(authorIDList, start_year)
+                authorIDList = self.removeAuthorsThatWerentAliveAfterStartYear(authorIDList, start_year)
             
             if end_year != None:
-                removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)
+                authorIDList = self.removeAuthorsThatWerentAliveBeforeEndYear(authorIDList, end_year)
         
         elif start_year != None:
             for authorID in self.authorDict:
-                authorBirthYear = self.authorDict[authorID]['birth_year']
-                if authorBirthYear >= start_year:
+                authorDeathYear = self.authorDict[authorID]['death_year']
+                if authorDeathYear == None:
+                    authorIDList.append(authorID)
+                elif authorDeathYear >= start_year:
                     authorIDList.append(authorID)
                     
             if end_year != None:
-                self.removeAuthorsThatWerentAliveAfterEndYear(authorIDList, end_year)
+                authorIDList = self.removeAuthorsThatWerentAliveBeforeEndYear(authorIDList, end_year)
         
         elif end_year != None: 
             for authorID in self.authorDict:
-                authorDeathYear = self.authorDict[authorID]['death_year']
-                if authorDeathYear <= end_year:
+                authorBirthYear = self.authorDict[authorID]['birth_year']
+                if authorBirthYear <= end_year:
                     authorIDList.append(authorID)
                      
         else: 
-            print(self.authorDict)
-            
+            for authors in self.authorDict:
+                authorsList.append(self.authorDict[authors])
             
         for authorID in authorIDList: 
             authorEntry = self.authorDict[authorID]
             authorsList.append(authorEntry)
-        if sort_by == 'title':
-            newAuthorEntryList = sorted(authorsList, key=lambda k: k['title']) 
-        elif sort_by == 'year':
-            newAuthorEntryList = sorted(authorsList, key=lambda k: k['birth_year'])    
+        if sort_by == 'birth_year':
+            newAuthorEntryList = sorted(authorsList, key=lambda k: k['birth_year']) 
+        else:
+            newAuthorEntryList = sorted(authorsList, key=lambda k: k['last_name'])    
         return authorsList
     
     
     def removeAuthorsThatDontMatchSearchText(self, authorIDList, search_text): 
+        searchText = search_text.lower()
         authorIDListSearchText = []
         for authorID in self.authorDict: 
-            authorFirstName = self.authorDict[authorID]['first_name']
-            authorLastName = self.authorDict[authorID]['last_name']
+            authorFirstName = self.authorDict[authorID]['first_name'].lower()
+            authorLastName = self.authorDict[authorID]['last_name'].lower()
             if search_text in authorFirstName or search_text in authorLastName: 
                 authorIDList.append(authorID)
         return authorIDListSearchText
     
-    def removeAuthorsThatWerentAliveBeforeStartYear(self, authorIDList, start_year):
+    def removeAuthorsThatWerentAliveAfterStartYear(self, authorIDList, start_year):
         authorIDListStartYear = [] 
         for authorID in authorIDList:
-            authorBirthYear = self.authorDict[authorID]['birth_year']
-            if authorBirthYear >= start_year:
+            authorDeathYear = self.authorDict[authorID]['death_year']
+            if authorDeathYear == None:
+                authorIDListStartYear.append(authorID)
+            elif authorDeathYear >= start_year:
                 authorIDListStartYear.append(authorID)
         return authorIDListStartYear
     
-    def removeAuthorsThatWerentAliveAfterEndYear(self, authorIDList, end_year):
+    def removeAuthorsThatWerentAliveBeforeEndYear(self, authorIDList, end_year):
         authorIDListEndYear = [] 
         for authorID in authorIDList:
-            authorDeathYear = self.authorDict[authorID]['death_year']
-            if authorDeathYear <= end_year:
+            authorBirthYear = self.authorDict[authorID]['birth_year']
+            if authorBirthYear >= end_year:
                 authorIDListEndYear.append(authorID)
         return authorIDListEndYear
     
 if __name__ == '__main__':
     books = BooksDataSource('books.csv', 'authors.csv', 'books_authors.csv')
-    print(books.authors(search_text = 'Jane', start_year = 1900))
+#    print(books.authors(search_text = 'Jane', start_year = 1900))
