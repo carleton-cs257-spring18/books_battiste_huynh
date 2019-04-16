@@ -228,7 +228,7 @@ class BooksDataSource:
         return booksList
     
     
-    def removeBooksThatDontMatchSearchText(self, bookIDList): 
+    def removeBooksThatDontMatchSearchText(self, bookIDList, search_text): 
         bookIDListSearchText = []
         for bookID in bookIDList: 
             bookName = self.bookDict[bookID]['title']
@@ -314,8 +314,9 @@ class BooksDataSource:
   
         elif search_text != None:
             for authorID in self.authorDict: 
-                authorName = self.authorDict[authorID]['title']
-                if search_text in authorName: 
+                authorFirstName = self.authorDict[authorID]['first_name']
+                authorLastName = self.authorDict[authorID]['last_name']
+                if search_text in authorFirstName or search_text in authorLastName: 
                     authorIDList.append(authorID)
             
             
@@ -354,12 +355,13 @@ class BooksDataSource:
         return authorsList
     
     
-    def removeAuthorsThatDontMatchSearchText(self, authorIDList): 
+    def removeAuthorsThatDontMatchSearchText(self, authorIDList, search_text): 
         authorIDListSearchText = []
-        for authorID in authorIDList: 
-            authorName = self.authorDict[authorID]['title']
-            if search_text in authorName:
-                authorIDListSearchText.append(authorID)
+        for authorID in self.authorDict: 
+            authorFirstName = self.authorDict[authorID]['first_name']
+            authorLastName = self.authorDict[authorID]['last_name']
+            if search_text in authorFirstName or search_text in authorLastName: 
+                authorIDList.append(authorID)
         return authorIDListSearchText
     
     def removeAuthorsThatWerentAliveBeforeStartYear(self, authorIDList, start_year):
@@ -380,4 +382,4 @@ class BooksDataSource:
     
 if __name__ == '__main__':
     books = BooksDataSource('books.csv', 'authors.csv', 'books_authors.csv')
-    print(books.authors(start_year = 1900, end_year = 1950))
+    print(books.authors(search_text = 'Jane', start_year = 1900))
