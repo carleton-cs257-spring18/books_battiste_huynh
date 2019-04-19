@@ -7,18 +7,18 @@ The other team: Matthew Stritzel and Alvin Bierley
 The other team's code passed their own tests. 
 
 At first, their code only passed 17 out of our 46 tests. This is because we had different interpretation of how the dictionaries stored the data. They stored all the numeric data as string type while we stored all of our numeric data as integers. THey also capitalized the first letter of their keys while we did not. 
-Hence, we decided to change our test to fit their interpretation. Their code then passed 8 tests and gave 22 errors. 
+Hence, we decided to change our test to fit their interpretation. Their code passed 8 tests, failed 15 tests and gave 22 errors. 
 
     ''' 
         Unit tests for book
     '''
     
     def test_book_zero(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
         
     def test_book_ID_valid(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
     
     def test_book_ID_incorrect_result(self):
@@ -26,12 +26,10 @@ Hence, we decided to change our test to fit their interpretation. Their code the
         they compared integers in their code but did not return integers for their dictionaries
         
     def test_book_ID_negative(self):
-        fail
-        their code did not raise a ValueError
+        pass
 
     def test_book_ID_too_big(self):
-        fail
-        their code did not raise a ValueError 
+        pass
         
     '''
         Unit tests for books
@@ -43,11 +41,10 @@ Hence, we decided to change our test to fit their interpretation. Their code the
     
     def test_books_valid_author_ID(self):
         fail 
-        their code returned a lot more books than expected 
+        their code returned 2 books instead of 1 for book id 1
 
     def test_books_author_ID_wrong_books(self):
-        error
-        they compared integers in their code but did not return integers for their dictionaries        
+        pass     
         
     def test_books_author_ID_negative_ID(self):
         fail
@@ -59,22 +56,21 @@ Hence, we decided to change our test to fit their interpretation. Their code the
         
     def test_books_valid_search_text(self):
         fail 
-        their code returned a lot more books than expected 
+        their code returned the wrong book 
         
     def test_books_search_text_no_result(self):
         fail
         their code returned a lot more books than expected (search_text = phuoc)
     
     def test_books_search_text_wrong_result(self):
-        error
-        they compared integers in their code but did not return integers for their dictionaries
+        pass
     
     def test_books_start_year(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
         
     def test_books_start_year_wrong_books(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_books_end_year(self):
@@ -82,23 +78,23 @@ Hence, we decided to change our test to fit their interpretation. Their code the
         their code returned a lot more books than expected 
         
     def test_books_end_year_wrong_books(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_books_sort_by_default_wrong_order(self):
-        error
+        error in their code
         the list of dictionaries was not sorted based on title
         
     def test_books_sort_by_year(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
         
     def test_books_sort_by_year_wrong_order(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
 
     def test_books_author_ID_and_start_year(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries
 
     def test_books_search_text_and_end_year(self):
@@ -111,43 +107,40 @@ Hence, we decided to change our test to fit their interpretation. Their code the
     '''
     
     def test_author_ID_valid(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
     
     def test_author_ID_incorrect_result(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_author_ID_zero(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_author_ID_negative(self):
-        fail
-        their code did not raise a ValueError 
+        pass 
 
     def test_author_ID_too_big(self):
-        fail
-        their code did not raise a ValueError 
+        pass
         
     '''
         Unit test for authors
     '''
     
-    def test_authors_no_parameters(self):
+    def test_authors_no_parameters(self): 
         error in their code
         authors not sorted correctly based on birth year
     
-    def test_authors_valid_book_ID(self):
+    def test_authors_valid_book_ID(self): 
         fail 
         expected result is Agatha Christie (book_id = 1)
         given result was Jane Austen
 
     def test_authors_book_ID_wrong_author(self):
-        error
-        they compared integers in their code but did not return integers for their dictionaries
-
-    def test_authors_book_ID_negative_ID(self):
+        pass
+        
+    def test_authors_book_ID_negative_ID(self): 
         fail
         they did not raise a ValueError in their code 
         
@@ -155,58 +148,57 @@ Hence, we decided to change our test to fit their interpretation. Their code the
         fail
         they did not raise a ValueError in their code 
                 
-    def test_authors_valid_search_text(self):
+    def test_authors_valid_search_text(self): 
         fail 
         expected result is Agatha Christie (search_text = Agatha)
-        given result was Jane Austen
+        a lot of authors were returned
         
     def test_authors_valid_search_text_all_lower_case(self):
         fail 
         expected result is Agatha Christie (search_text = agatha)
-        given result was Jane Austen
+        a lot of authors were returned   
         
-    def test_authors_search_text_no_result(self):
+    def test_authors_search_text_no_result(self): 
         fail
         we passed in 'phuoc' and their code gave us a dictionary of information on Agatha Christie
     
-    def test_authors_search_text_wrong_result(self):
-        fail
-        there were more books than 0 
+    def test_authors_search_text_wrong_result(self): 
+        pass
     
     def test_authors_start_year_correct_results(self): 
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_start_year_wrong_authors(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
     
     def test_authors_start_year_no_authors(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
     
     def test_authors_end_year_correct_results(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_end_year_no_lower_case_authors(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_end_year_wrong_results(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_sort_by_birth_year(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_sort_by_birth_year_wrong_order(self):
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_two_parameters_start_year_end_year(self): 
-        error
+        error in their code
         they compared integers in their code but did not return integers for their dictionaries 
         
     def test_authors_two_parameters_search_text_sort_by(self):
